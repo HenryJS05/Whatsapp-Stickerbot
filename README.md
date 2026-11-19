@@ -1,103 +1,85 @@
-# Bot de Stickers para WhatsApp (`dcss-stickers`)
+# Bot de Stickers para WhatsApp (dcss-stickers)
 
-Convierte automáticamente imágenes, videos cortos, GIFs y enlaces de X (Twitter) enviados a grupos autorizados de WhatsApp en stickers de alta calidad (manteniendo su proporción original con fondo transparente).
+Convierte automáticamente fotos, videos cortos, GIFs y enlaces de X (Twitter) enviados a WhatsApp en stickers de alta calidad, conservando su proporción original con fondo transparente.
 
----
-
-## 🚀 Características
-
-* 🖼️ **Imágenes y Fotos:** Se convierten en stickers estáticos WebP (512x512) conservando su forma original con bordes transparentes.
-* 🎞️ **Videos y GIFs (≤ 8 segundos):** Se convierten en stickers animados optimizados (< 500 KB para cumplir con las restricciones de WhatsApp).
-* 🐦 **Enlaces de X / Twitter:** Descarga automática de fotos, GIFs o videos publicados en X para convertirlos en stickers sin requerir APIs de pago.
-* ⏳ **Reacciones interactivas:**
+### ✨ ¿Qué hace?
+* 🖼️ **Foto o imagen:** Te devuelve un sticker estático.
+* 🎞️ **GIF o video corto (máx. 8 segundos):** Te devuelve un sticker animado (< 500 KB).
+* 🐦 **Link de X / Twitter (foto, GIF o video):** Lo descarga y lo convierte en sticker.
+* ⏳ **Reacciones automáticas:**
   * ⏳ *Procesando...*
   * ✅ *¡Sticker enviado!*
   * ❌ *Hubo un error (video muy largo, tweet privado o sin medios).*
-* 🔒 **Filtro de grupos autorizados:** Control total sobre en qué grupos puede operar el bot.
-* 💬 **Soporte para citas/respuestas:** Puedes responder a una imagen o video existente y el bot lo convertirá.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 🚀 Guía de Instalación Rápida
 
-```text
-dcss-stickers/
-├── auth_info/                  # Sesión guardada de WhatsApp (generada tras escanear el QR)
-├── src/
-│   ├── config/
-│   │   └── index.js            # Lectura de variables de entorno y configuración
-│   ├── handlers/
-│   │   └── messageHandler.js   # Procesamiento de mensajes, filtros y reacciones
-│   ├── services/
-│   │   ├── sticker.service.js  # Conversión con Sharp y FFmpeg (512x512 + bordes transparentes)
-│   │   ├── twitter.service.js  # Extracción de medios de X/Twitter vía FxTwitter API
-│   │   └── whatsapp.service.js # Cliente WebSocket de WhatsApp (Baileys)
-│   ├── utils/
-│   │   ├── exif.js             # Inyección de metadatos EXIF de WhatsApp en WebP
-│   │   └── mediaDownloader.js  # Descarga de medios de WhatsApp y URLs externas
-│   └── index.js                # Punto de entrada
-├── temp/                       # Archivos temporales de procesamiento
-├── .env                        # Configuración activa
-├── .env.example                # Plantilla de configuración
-├── package.json
-└── README.md
+Sigue estos sencillos pasos para correr el bot en tu propia computadora:
+
+### 1. Requisitos previos
+* **Node.js** (versión 18 o superior): [Descargar Node.js](https://nodejs.org/)
+* **FFmpeg** instalado en tu sistema:
+  * **Windows:** Descarga desde [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) o con `winget install Gyan.FFmpeg`.
+  * **Mac:** `brew install ffmpeg`
+  * **Linux:** `sudo apt install ffmpeg`
+
+---
+
+### 2. Clonar e instalar dependencias
+
+Abre tu terminal y ejecuta:
+
+```bash
+# 1. Clonar este repositorio
+git clone https://github.com/TU_USUARIO/dcss-stickers.git
+cd dcss-stickers
+
+# 2. Instalar las dependencias
+npm install
 ```
 
 ---
 
-## ⚙️ Requisitos Previos
+### 3. Configurar el archivo `.env`
 
-1. **Node.js** v18 o superior (probado con v26).
-2. **FFmpeg** instalado y accesible desde la terminal (`ffmpeg -version`).
+Copia la plantilla de configuración:
 
----
+* **En Windows (PowerShell / CMD):**
+  ```powershell
+  copy .env.example .env
+  ```
+* **En Mac / Linux:**
+  ```bash
+  cp .env.example .env
+  ```
 
-## 🛠️ Configuración
-
-1. Revisa o edita el archivo `.env`:
-
-```env
-# Deja vacío o pon "*" para permitir todos los grupos donde esté el bot.
-# Para limitar a grupos específicos, añade los JIDs separados por coma:
-ALLOWED_GROUPS=
-
-# Metadatos que aparecerán al tocar el sticker en WhatsApp
-STICKER_PACK_NAME="dcss-stickers"
-STICKER_AUTHOR="DCSS Bot"
-
-# Duración máxima de videos/GIFs (por defecto 8 segundos)
-MAX_VIDEO_DURATION_SECONDS=8
-```
-
-> 💡 **¿Cómo saber el ID de un grupo?**
-> Con el bot encendido, envía `.id` o `!id` en cualquier grupo y el bot responderá con el ID exacto (ej. `120363028392819283@g.us`). Cópialo a `ALLOWED_GROUPS`.
+*(Opcional)* Abre el archivo `.env` si deseas cambiar el nombre del pack de stickers o el autor. Por defecto funcionará en cualquier grupo donde esté el bot.
 
 ---
 
-## ▶️ Ejecución
+### 4. Iniciar el bot y vincular WhatsApp
 
-### Modo producción:
+Ejecuta:
+
 ```bash
 npm start
 ```
 
-### Modo desarrollo (con recarga automática):
-```bash
-npm run dev
-```
-
-1. La primera vez que lo inicies, verás un **código QR en la terminal**.
+1. Aparecerá un **código QR** en tu terminal.
 2. Abre WhatsApp en tu teléfono:
-   * **Ajustes / Configuración** > **Dispositivos vinculados** > **Vincular un dispositivo**.
-   * Escanea el código QR de la terminal.
-3. Las credenciales se guardarán en la carpeta `auth_info/`, por lo que **no tendrás que volver a escanearlo** en futuros reinicios.
+   * Ve a **Ajustes** (o los tres puntos arriba a la derecha).
+   * Selecciona **Dispositivos vinculados** > **Vincular un dispositivo**.
+   * Escanea el código QR que se muestra en la pantalla.
+3. ¡Listo! La sesión quedará guardada en la carpeta local `auth_info/`, por lo que **no tendrás que volver a escanearlo** en futuros reinicios.
 
 ---
 
-## 📝 Uso en WhatsApp
+## 💡 Cómo usarlo en WhatsApp
 
-En el grupo autorizado:
-1. **Foto:** Envía cualquier imagen o foto directa (o responde a una con cualquier texto).
-2. **Video / GIF:** Envía un video de hasta 8 segundos (o un GIF).
-3. **Enlace de X / Twitter:** Envía un mensaje que contenga el enlace del tweet (ejemplo: `https://x.com/usuario/status/1234567890`).
-4. Observa cómo el bot reacciona con ⏳ mientras procesa, y luego con ✅ enviando el sticker.
+* **Crear sticker:** Envía una foto, video corto (< 8s) o link de X al grupo. También puedes responder a una foto o video existente enviando cualquier mensaje o `.s`.
+* **Saber el ID de un grupo:** Escribe `.id` en cualquier grupo y el bot responderá con su código identificador.
+* **Limitar a grupos específicos:** Si no quieres que responda en todos lados, coloca el ID del grupo en el archivo `.env` en la variable `ALLOWED_GROUPS`:
+  ```env
+  ALLOWED_GROUPS="120363028392819283@g.us"
+  ```
